@@ -37,6 +37,7 @@ const StudentLogin = () => {
       if (response.ok) {
         localStorage.setItem('student', JSON.stringify(data.student))
         alert(data.successMsg)
+        navigate('/student/profile')
       } else {
         alert(data.message)
       }
@@ -51,24 +52,41 @@ const StudentLogin = () => {
       <div class="home_container">
         <div class="home_container_left">
           <div class="home_container_left_heading">
-            <h2>
-              Bright Boost Lorem ipsum dolor sit, amet consectetur adipisicing
-              elit. Aliquam possimus reprehenderit, aspernatur placeat facilis
-              temporibus similique autem doloremque sit corporis nisi nemo aut
-              consequatur est? Consequuntur, omnis. Ipsa, exercitationem.
-              Aspernatur.
-            </h2>
+            <h2>Welcome to Bright Boost: Your Academic Lifesaver!</h2>
           </div>
           <div class="content">
             <div class="content_body">
               <div class="content_text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quos
-                cumque asperiores alias voluptatibus ex porro, dolorum velit!
-                Autem quam odio, doloremque quas eaque, ab, voluptas inventore
-                quis saepe molestiae ut?Lorem ipsum, dolor sit amet consectetur
-                adipisicing elit. Libero eum animi, excepturi nostrum et cum!
-                Laboriosam doloremque provident quos sint voluptatem corporis in
-                ullam, velit enim, ratione corrupti vel repellat.
+                <em>
+                  At Bright Boost, we believe in the power of knowledge and the
+                  potential of every high school student. Our after-school
+                  program is here to elevate your educational journey by
+                  providing top-notch tutoring in a welcoming and supportive
+                  environment. Whether you're striving for that 'A+' or seeking
+                  clarity on a tricky concept, Bright Boost is your go-to
+                  destination for academic excellence.
+                </em>
+              </div>
+              <br />
+              <div class="content_text">
+                <b>📚 Unleash Your Potential:</b> Join Bright Boost, where high
+                school students like you thrive academically.
+                <br />
+                <b>🌟 Personalized Support:</b> Our expert tutors are here to
+                help you conquer your studies and ace those exams.
+                <br />
+                <b>📆 Plan Your Success:</b> Explore our interactive timetable
+                to stay organized and make the most of your after-school
+                sessions.
+                <br />
+                <b>📈 Data-Driven Learning:</b> We're not just here to teach;
+                we're here to track your progress and make data-informed
+                decisions for your success.
+                <br />
+                <em>
+                  Discover Bright Boost and take the next step towards a
+                  brighter future. Your learning adventure starts here!
+                </em>
               </div>
             </div>
           </div>

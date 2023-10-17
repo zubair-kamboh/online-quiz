@@ -11,8 +11,22 @@ const payment = asynHandler(async (req, res) => {
     ccv,
     validity,
     price,
-    email,
+    studentId,
   } = req.body
+
+  if (
+    !cardnumber ||
+    !cardtype ||
+    !expirymonth ||
+    !expiryyear ||
+    !ccv ||
+    !validity ||
+    price ||
+    studentId
+  ) {
+    res.status(400)
+    throw new Error('All fields are required!')
+  }
 
   const paymentDoc = new PaymentModel({
     cardnumber,
@@ -22,24 +36,26 @@ const payment = asynHandler(async (req, res) => {
     ccv,
     validity,
     price,
+    studentId,
   })
 
-  const paymentInfoSaved = await paymentDoc.save()
+  const nonPaidStudent = await StudentAuthModel.findOne({
+    _id: studentId,
+    paymentstatus: false,
+  })
 
-  if (paymentInfoSaved) {
-    const changeStudentStatus = await StudentAuthModel.findOneAndUpdate(
-      { email },
-      {
-        paymentstatus: true,
-      }
-    )
+  if (nonPaidStudent) {
+    nonPaidStudent.paymentstatus = true
+    const paymentInfoSaved = await paymentDoc.save()
 
-    if (changeStudentStatus) {
-      res
-        .status(200)
-        .json({ successMsg: 'Payment information saved! and status updated' })
+    if (paymentInfoSaved) {
+      nonPaidStudent.save()
+      res.status(200).json({ successMsg: 'Payment confirmed!' })
     }
   }
+
+  res.status(500)
+  throw new Error('Something went wrong!')
 })
 
 module.exports = {

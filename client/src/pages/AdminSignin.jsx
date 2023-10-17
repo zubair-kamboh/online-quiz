@@ -2,10 +2,13 @@ import React, { useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import logo from '../images/flogo.png'
+import { useNavigate } from 'react-router-dom'
 
-const AdminLogin = () => {
+const AdminSignin = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  const navigate = useNavigate()
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value)
@@ -34,8 +37,8 @@ const AdminLogin = () => {
 
       if (response.ok) {
         localStorage.setItem('admin', JSON.stringify(data.admin))
-        console.log(data)
         alert(data.successMsg)
+        navigate('/admin/profile')
       } else {
         alert(data.message)
       }
@@ -104,4 +107,4 @@ const AdminLogin = () => {
   )
 }
 
-export default AdminLogin
+export default AdminSignin

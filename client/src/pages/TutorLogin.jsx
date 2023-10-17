@@ -37,6 +37,7 @@ const TutorLogin = () => {
       if (response.ok) {
         localStorage.setItem('tutor', JSON.stringify(data.teacher))
         alert(data.successMsg)
+        navigate('/tutor/profile')
       } else {
         alert(data.message)
       }

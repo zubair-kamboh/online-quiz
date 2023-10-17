@@ -35,6 +35,7 @@ const PaymentSchema = new Schema(
       type: String,
       required: true,
     },
+    studentId: { type: mongoose.Schema.Types.String, ref: 'Student' },
   },
   { timestamps: true }
 )
