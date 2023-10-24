@@ -8,11 +8,11 @@ const StudentEnrollmentModel = require('../models/StudentEnrollmentModel')
 // Route: /tutor/enrollment
 // Method: POST
 const tutorEnrollment = asynHandler(async (req, res) => {
-  const { grades, subjects, days, method, time, qualifications, teacherId } =
+  const { grades, subjects, date, method, time, qualifications, teacherId } =
     req.body
 
   if (
-    (!grades || !subjects || !days || !method || !time,
+    (!grades || !subjects || !date || !method || !time,
     !qualifications || !teacherId)
   ) {
     res.status(500)
@@ -35,7 +35,7 @@ const tutorEnrollment = asynHandler(async (req, res) => {
   const enrollment = new TutorEnrollmentModel({
     grades,
     subjects,
-    days,
+    date,
     method,
     time,
     qualifications,
@@ -45,11 +45,10 @@ const tutorEnrollment = asynHandler(async (req, res) => {
   const enrollmentSaved = await enrollment.save()
 
   if (enrollmentSaved) {
-    // save enrollment in teacher's table
     const doc = await TeacherAuthModel.findOne({ _id: teacherId })
     doc.enrollment.push(enrollmentSaved._id)
     doc.save()
-    res.json({ successMsg: 'Tutor enrollment saved!' })
+    res.json({ successMsg: 'Tutor enrollment saved!', tutor: doc })
   }
 })
 
@@ -124,6 +123,11 @@ const averageStudentsEnrolled = asynHandler(async (req, res) => {
 
   const students = await StudentEnrollmentModel.find({ tutor: tutorEmail })
 
+  if (!students) {
+    res.status(404)
+    throw new Error('No students found!')
+  }
+
   if (students.length > 0) {
     const totalStudents = students.length
     const totalCourses = 0
@@ -167,10 +171,10 @@ const averageTime = asynHandler(async (req, res) => {
 
 // Tutorial Portal - Get Students
 // Route: /tutor/tutorial-portal/get-students
-// Method: GET
+// Method: POST
 const getStudents = asynHandler(async (req, res) => {
   const { teacherEmail, subjects, grades } = req.body
-
+  console.log(teacherEmail, subjects, grades)
   if (!teacherEmail || !subjects || !grades) {
     res.status(400)
     throw new Error('No teacher email, grades or subjects attached')
@@ -196,16 +200,16 @@ const getStudents = asynHandler(async (req, res) => {
 // Route: /tutor/tutorial-portal/save-time-question
 // Method: POST
 const saveTimeAndQuestion = asynHandler(async (req, res) => {
-  const { timer, tutorId, enrollmentId, question } = req.body
-  if (!timer || !tutorId || !enrollmentId || !question) {
+  const { timer, tutorEmail, studentEnrollmentID, question } = req.body
+  if (!timer || !tutorEmail || !studentEnrollmentID || !question) {
     res.status(400)
     throw new Error('Time, Tutor Id, Question and Enrollment Id is requered!')
   }
 
-  const doc = await TutorEnrollmentModel.findOneAndUpdate(
+  const doc = await StudentEnrollmentModel.findOneAndUpdate(
     {
-      _id: enrollmentId,
-      teacherId: tutorId,
+      _id: studentEnrollmentID,
+      tutorEmail: tutorEmail,
     },
     {
       timer,
@@ -215,10 +219,10 @@ const saveTimeAndQuestion = asynHandler(async (req, res) => {
 
   if (!doc) {
     res.status(400)
-    throw new Error('Timer could not be started')
+    throw new Error('No Student Found!')
   }
 
-  res.json({ successMsg: 'timer and question saved in db' })
+  res.json({ successMsg: 'Timer and question saved in db' })
 })
 
 // Tutorial Portal - Delete Student If Absent
@@ -254,6 +258,28 @@ const deleteAbsentStudent = asynHandler(async (req, res) => {
   res.json({ successMsg: 'Student successfully deleted!' })
 })
 
+// Get Tutor Profile
+// Route: /tutor/get-profile
+// Method: POST
+const getTutorProfile = asynHandler(async (req, res) => {
+  const { tutorId } = req.body
+  if (!tutorId) {
+    res.status(400)
+    throw new Error('No id attached!')
+  }
+
+  const doc = await TeacherAuthModel.findOne({
+    _id: tutorId,
+  }).select('fullname _id address school email teacherstatus')
+
+  if (!doc) {
+    res.status(400)
+    throw new Error('No tutor found')
+  }
+
+  res.json(doc)
+})
+
 module.exports = {
   tutorEnrollment,
   listTutorEnrollments,
@@ -264,4 +290,5 @@ module.exports = {
   totalStudentsEnrolled,
   averageStudentsEnrolled,
   averageTime,
+  getTutorProfile,
 }

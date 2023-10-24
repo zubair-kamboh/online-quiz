@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { useNavigate } from 'react-router-dom'
@@ -14,6 +14,13 @@ const initialFormData = {
 const TutorRegistration = () => {
   const navigate = useNavigate()
   const [formData, setFormData] = useState(initialFormData)
+
+  useEffect(() => {
+    const tutor = localStorage.getItem('tutor')
+    if (tutor) {
+      navigate('/tutor/profile')
+    }
+  }, [])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target

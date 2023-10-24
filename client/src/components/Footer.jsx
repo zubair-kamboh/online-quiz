@@ -6,12 +6,7 @@ const Footer = () => {
   return (
     <footer class="footerdiv">
       <div class="footerdiv_text">
-        <h2>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rem aliquid
-          vero qui quibusdam similique excepturi eveniet facere deserunt quaerat
-          officiis eaque nostrum dicta iure, veniam ducimus porro aperiam
-          distinctio provident!
-        </h2>
+        <h2>Elevate Your Learning, Illuminate Your Future</h2>
         <div class="footerdiv_connect">
           <a href="mailto:104823405@student.swin.edu.au">
             <img src={email} alt="email logo" id="email" />

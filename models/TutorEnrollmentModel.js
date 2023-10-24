@@ -11,17 +11,13 @@ const TutorEnrollmentSchema = new Schema(
       type: String,
       required: true,
     },
-    days: {
+    date: {
       type: String,
       required: true,
     },
     method: {
       type: String,
       required: true,
-    },
-    date: {
-      type: String,
-      required: false,
     },
     time: {
       type: String,
@@ -34,14 +30,6 @@ const TutorEnrollmentSchema = new Schema(
     teacherId: {
       type: mongoose.Schema.Types.String,
       ref: 'Teacher',
-    },
-    timer: {
-      type: Number,
-      default: 0,
-    },
-    question: {
-      type: String,
-      required: false,
     },
   },
   { timestamps: true }

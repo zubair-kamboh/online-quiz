@@ -1,13 +1,21 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { useNavigate } from 'react-router-dom'
 import logo from '../images/flogo.png'
+import HomePageDescription from '../components/HomePageDescription'
 
 const StudentLogin = () => {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  useEffect(() => {
+    const student = localStorage.getItem('student')
+    if (student) {
+      navigate('/student/profile')
+    }
+  }, [])
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value)
@@ -50,47 +58,7 @@ const StudentLogin = () => {
     <>
       <Header />
       <div class="home_container">
-        <div class="home_container_left">
-          <div class="home_container_left_heading">
-            <h2>Welcome to Bright Boost: Your Academic Lifesaver!</h2>
-          </div>
-          <div class="content">
-            <div class="content_body">
-              <div class="content_text">
-                <em>
-                  At Bright Boost, we believe in the power of knowledge and the
-                  potential of every high school student. Our after-school
-                  program is here to elevate your educational journey by
-                  providing top-notch tutoring in a welcoming and supportive
-                  environment. Whether you're striving for that 'A+' or seeking
-                  clarity on a tricky concept, Bright Boost is your go-to
-                  destination for academic excellence.
-                </em>
-              </div>
-              <br />
-              <div class="content_text">
-                <b>📚 Unleash Your Potential:</b> Join Bright Boost, where high
-                school students like you thrive academically.
-                <br />
-                <b>🌟 Personalized Support:</b> Our expert tutors are here to
-                help you conquer your studies and ace those exams.
-                <br />
-                <b>📆 Plan Your Success:</b> Explore our interactive timetable
-                to stay organized and make the most of your after-school
-                sessions.
-                <br />
-                <b>📈 Data-Driven Learning:</b> We're not just here to teach;
-                we're here to track your progress and make data-informed
-                decisions for your success.
-                <br />
-                <em>
-                  Discover Bright Boost and take the next step towards a
-                  brighter future. Your learning adventure starts here!
-                </em>
-              </div>
-            </div>
-          </div>
-        </div>
+        <HomePageDescription />
         <div class="home_container_right">
           <form class="signin_container_form" onSubmit={handleSubmit}>
             <img src={logo} alt="logo.png" />

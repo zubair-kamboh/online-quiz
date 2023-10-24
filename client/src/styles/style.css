@@ -43,7 +43,7 @@ body {
 .navbar_menu .navbar_item {
   list-style: none;
   margin-left: 50px;
-  padding: 10px;
+  padding: 7px;
   background-color: rgb(230, 173, 107);
   border-radius: 10px;
 }
@@ -55,7 +55,7 @@ body {
 .navbar_menu .navbar_item a {
   text-decoration: none;
   color: black;
-  font-size: 22px;
+  font-size: 18px;
 }
 
 .footerdiv {
@@ -259,7 +259,8 @@ body {
   flex-direction: column;
 }
 
-.apply_container .apply_btn button {
+.apply_container .apply_btn button,
+.enrollment_requests_btns button {
   background-color: rgb(230, 173, 107);
   margin: 15px 0;
   font-size: 20px;

@@ -42,6 +42,15 @@ const StudentEnrollmentSchema = new Schema({
     type: mongoose.Schema.Types.String,
     ref: 'Student',
   },
+
+  timer: {
+    type: Number,
+    default: 0,
+  },
+  question: {
+    type: String,
+    required: false,
+  },
 })
 
 module.exports = mongoose.model('StudentEnrollment', StudentEnrollmentSchema)

@@ -4,12 +4,18 @@ import { useNavigate } from 'react-router-dom'
 
 const Header = ({ admin, student, tutor }) => {
   const [studentProfileData, setStudentProfileData] = useState({})
+  const [tutorProfileData, setTutorProfileData] = useState({})
   const navigate = useNavigate()
 
   useEffect(() => {
     const student = localStorage.getItem('student')
     if (student) {
       setStudentProfileData(JSON.parse(student))
+    }
+
+    const tutor = localStorage.getItem('tutor')
+    if (tutor) {
+      setTutorProfileData(JSON.parse(tutor))
     }
   }, [])
 
@@ -26,7 +32,7 @@ const Header = ({ admin, student, tutor }) => {
             <ul class="navbar_menu">
               <li class="navbar_item" id="student_home">
                 <a
-                  onClick={() => navigate('/student/profile')}
+                  onClick={() => navigate('/admin/profile')}
                   style={{ cursor: 'pointer' }}
                 >
                   Profile
@@ -34,7 +40,7 @@ const Header = ({ admin, student, tutor }) => {
               </li>
               <li class="navbar_item" id="tutor_home">
                 <a
-                  onClick={() => navigate('/tutor/login')}
+                  onClick={() => navigate('/admin/enrollment-requests')}
                   style={{ cursor: 'pointer' }}
                 >
                   Enrollment Requests
@@ -42,7 +48,7 @@ const Header = ({ admin, student, tutor }) => {
               </li>
               <li class="navbar_item" id="admin_home">
                 <a
-                  onClick={() => navigate('/admin/login')}
+                  onClick={() => navigate('/admin/courses')}
                   style={{ cursor: 'pointer' }}
                 >
                   Courses
@@ -50,7 +56,7 @@ const Header = ({ admin, student, tutor }) => {
               </li>
               <li class="navbar_item" id="admin_home">
                 <a
-                  onClick={() => navigate('/admin/login')}
+                  onClick={() => navigate('/admin/statistics')}
                   style={{ cursor: 'pointer' }}
                 >
                   Statistics
@@ -95,7 +101,7 @@ const Header = ({ admin, student, tutor }) => {
               </li>
               <li class="navbar_item" id="tutor_home">
                 <a
-                  onClick={() => navigate('/tutor/login')}
+                  onClick={() => navigate('/student/enrollment')}
                   style={{
                     cursor: 'pointer',
                     pointerEvents:
@@ -111,7 +117,7 @@ const Header = ({ admin, student, tutor }) => {
               </li>
               <li class="navbar_item" id="admin_home">
                 <a
-                  onClick={() => navigate('/admin/login')}
+                  onClick={() => navigate('/student/course-portal')}
                   style={{
                     cursor: 'pointer',
                     pointerEvents:
@@ -127,7 +133,7 @@ const Header = ({ admin, student, tutor }) => {
               </li>
               <li class="navbar_item" id="admin_home">
                 <a
-                  onClick={() => navigate('/admin/login')}
+                  onClick={() => navigate('/student/payment')}
                   style={{ cursor: 'pointer' }}
                 >
                   Payment
@@ -135,7 +141,7 @@ const Header = ({ admin, student, tutor }) => {
               </li>
               <li class="navbar_item" id="admin_home">
                 <a
-                  onClick={() => navigate('/admin/login')}
+                  onClick={() => navigate('/student/payment-status')}
                   style={{ cursor: 'pointer' }}
                 >
                   Payment Status
@@ -172,7 +178,7 @@ const Header = ({ admin, student, tutor }) => {
             <ul class="navbar_menu">
               <li class="navbar_item" id="student_home">
                 <a
-                  onClick={() => navigate('/student/login')}
+                  onClick={() => navigate('/tutor/login')}
                   style={{ cursor: 'pointer' }}
                 >
                   Profile
@@ -180,7 +186,7 @@ const Header = ({ admin, student, tutor }) => {
               </li>
               <li class="navbar_item" id="tutor_home">
                 <a
-                  onClick={() => navigate('/tutor/login')}
+                  onClick={() => navigate('/tutor/enrollment')}
                   style={{ cursor: 'pointer' }}
                 >
                   Enrollment
@@ -188,16 +194,28 @@ const Header = ({ admin, student, tutor }) => {
               </li>
               <li class="navbar_item" id="admin_home">
                 <a
-                  onClick={() => navigate('/admin/login')}
-                  style={{ cursor: 'pointer' }}
+                  onClick={() => navigate('/tutor/course-portal')}
+                  style={{
+                    cursor: 'pointer',
+                    pointerEvents:
+                      tutorProfileData.teacherstatus === false ? 'none' : 'all',
+                    opacity:
+                      tutorProfileData.teacherstatus === false ? '.3' : '1',
+                  }}
                 >
                   Course Portal
                 </a>
               </li>
               <li class="navbar_item" id="admin_home">
                 <a
-                  onClick={() => navigate('/admin/login')}
-                  style={{ cursor: 'pointer' }}
+                  onClick={() => navigate('/tutor/tutorial-portal')}
+                  style={{
+                    cursor: 'pointer',
+                    pointerEvents:
+                      tutorProfileData.teacherstatus === false ? 'none' : 'all',
+                    opacity:
+                      tutorProfileData.teacherstatus === false ? '.3' : '1',
+                  }}
                 >
                   Tutorial Portal
                 </a>
@@ -205,7 +223,7 @@ const Header = ({ admin, student, tutor }) => {
               <li class="navbar_item" id="admin_home">
                 <a
                   onClick={() => {
-                    localStorage.removeItem('student')
+                    localStorage.removeItem('tutor')
                     navigate('/tutor/login')
                   }}
                   style={{ cursor: 'pointer' }}

@@ -1,12 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import logo from '../images/flogo.png'
 import { useNavigate } from 'react-router-dom'
+import HomePageDescription from '../components/HomePageDescription'
 
 const AdminSignin = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  useEffect(() => {
+    const admin = localStorage.getItem('admin')
+    if (admin) {
+      navigate('/admin/profile')
+    }
+  }, [])
 
   const navigate = useNavigate()
 
@@ -52,30 +60,7 @@ const AdminSignin = () => {
       <Header />
 
       <div class="home_container">
-        <div class="home_container_left">
-          <div class="home_container_left_heading">
-            <h2>
-              Bright Boost Lorem ipsum dolor sit, amet consectetur adipisicing
-              elit. Aliquam possimus reprehenderit, aspernatur placeat facilis
-              temporibus similique autem doloremque sit corporis nisi nemo aut
-              consequatur est? Consequuntur, omnis. Ipsa, exercitationem.
-              Aspernatur.
-            </h2>
-          </div>
-          <div class="content">
-            <div class="content_body">
-              <div class="content_text">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quos
-                cumque asperiores alias voluptatibus ex porro, dolorum velit!
-                Autem quam odio, doloremque quas eaque, ab, voluptas inventore
-                quis saepe molestiae ut?Lorem ipsum, dolor sit amet consectetur
-                adipisicing elit. Libero eum animi, excepturi nostrum et cum!
-                Laboriosam doloremque provident quos sint voluptatem corporis in
-                ullam, velit enim, ratione corrupti vel repellat.
-              </div>
-            </div>
-          </div>
-        </div>
+        <HomePageDescription />
         <div className="home_container_right">
           <form className="signin_container_form" onSubmit={handleSubmit}>
             <img src={logo} alt="logo.png" />

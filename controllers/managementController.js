@@ -3,6 +3,7 @@ const { TeacherAuthModel } = require('../models/TeacherAuthModel')
 const StudentAuthModel = require('../models/StudentAuthModel')
 const StudentEnrollmentModel = require('../models/StudentEnrollmentModel')
 const TutorEnrollmentModel = require('../models/TutorEnrollmentModel')
+const { default: mongoose } = require('mongoose')
 
 // Tutor Enrollment
 // Route: /management/get-tutor-requests
@@ -44,25 +45,36 @@ const acceptTutorRequest = asynHandler(async (req, res) => {
 // Decline Enrollment Request
 // Route: /management/decline-request
 const declineTutorRequest = asynHandler(async (req, res) => {
-  const { email } = req.body
+  const { email, id } = req.body
+  const newId = mongoose.Types.ObjectId(id)
 
   const deletedTutor = await TeacherAuthModel.findOneAndDelete({ email })
+  const deletedEnrollments = await TutorEnrollmentModel.deleteMany({
+    teacherId: newId,
+  })
 
   if (!deletedTutor) {
     res.status(404)
     throw new Error('Tutor not found with that email!')
   }
 
-  res.status(200).json({ successMsg: 'Tutor has been deleted!' })
+  if (!deletedEnrollments) {
+    res.status(404)
+    throw new Error('Tutor enrollments have not been deleted!')
+  }
+
+  res
+    .status(200)
+    .json({ successMsg: 'Tutor & their Enrollments has been deleted!' })
 })
 
 // Management Courses
 // Route: /management/courses
 const courseTutors = asynHandler(async (req, res) => {
-  const tutors = await TeacherAuthModel.find({ teacherstatus: true })
-    .select('-school')
-    .select('-password')
-    .select('-teacherstatus')
+  const tutors = await TeacherAuthModel.find({ teacherstatus: true }).populate({
+    path: 'enrollment',
+    select: 'subjects grades -_id',
+  })
 
   res.json(tutors)
 })

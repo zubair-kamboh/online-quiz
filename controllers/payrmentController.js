@@ -14,6 +14,17 @@ const payment = asynHandler(async (req, res) => {
     studentId,
   } = req.body
 
+  console.log(
+    cardnumber,
+    cardtype,
+    expirymonth,
+    expiryyear,
+    ccv,
+    validity,
+    price,
+    studentId
+  )
+
   if (
     !cardnumber ||
     !cardtype ||
@@ -21,8 +32,8 @@ const payment = asynHandler(async (req, res) => {
     !expiryyear ||
     !ccv ||
     !validity ||
-    price ||
-    studentId
+    !price ||
+    !studentId
   ) {
     res.status(400)
     throw new Error('All fields are required!')
@@ -50,12 +61,22 @@ const payment = asynHandler(async (req, res) => {
 
     if (paymentInfoSaved) {
       nonPaidStudent.save()
-      res.status(200).json({ successMsg: 'Payment confirmed!' })
+      res.status(200).json({
+        successMsg: 'Payment confirmed!',
+        student: {
+          _id: nonPaidStudent._id,
+          fullname: nonPaidStudent.fullname,
+          email: nonPaidStudent.email,
+          address: nonPaidStudent.address,
+          school: nonPaidStudent.school,
+          paymentstatus: nonPaidStudent.paymentstatus,
+        },
+      })
     }
+  } else {
+    res.status(400)
+    throw new Error('Student has already subscribed to a payment plan!')
   }
-
-  res.status(500)
-  throw new Error('Something went wrong!')
 })
 
 module.exports = {

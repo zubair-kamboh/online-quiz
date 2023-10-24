@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Footer from '../components/Footer'
 import { useNavigate } from 'react-router-dom'
+import logo from '../images/flogo.png'
 
 const initialFormData = {
   fullName: '',
@@ -14,6 +15,13 @@ const initialFormData = {
 const StudentRegistration = () => {
   const navigate = useNavigate()
   const [formData, setFormData] = useState(initialFormData)
+
+  useEffect(() => {
+    const student = localStorage.getItem('student')
+    if (student) {
+      navigate('/student/profile')
+    }
+  }, [])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -57,7 +65,7 @@ const StudentRegistration = () => {
       <div class="navbar">
         <div class="navbar_left">
           <a href="./index.html">
-            <img class="navbar_logo" src="./images/flogo.png" alt="logo.png" />
+            <img class="navbar_logo" src={logo} alt="logo.png" />
           </a>
         </div>
       </div>

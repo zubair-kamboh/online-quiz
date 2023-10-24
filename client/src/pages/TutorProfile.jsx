@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 import { useNavigate } from 'react-router-dom'
+import getTutorProfile from '../hooks/usegetProfile'
+import usegetProfile from '../hooks/usegetProfile'
 
 const TutorProfile = () => {
   const [tutorProfileData, setTutorProfileData] = useState({})
   const navigate = useNavigate()
+
+  usegetProfile()
 
   useEffect(() => {
     const tutor = localStorage.getItem('tutor')
@@ -15,8 +19,6 @@ const TutorProfile = () => {
       navigate('/tutor/login')
     }
   }, [])
-
-  console.log(tutorProfileData)
 
   return (
     <>

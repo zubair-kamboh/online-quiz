@@ -6,11 +6,11 @@ const { default: mongoose } = require('mongoose')
 
 // Get Studet Enrollment
 // Route: /student/enrollment/get
-// Method: GET
+// Method: POST
 const studentEnrollment = asyncHandler(async (req, res) => {
   const { grades, subjects } = req.body
 
-  if (!grades) {
+  if (!grades || !subjects) {
     res.status(400)
     throw new Error('Please include your grade & subjects')
   }
@@ -22,7 +22,67 @@ const studentEnrollment = asyncHandler(async (req, res) => {
     .populate({ path: 'teacherId', select: 'fullname email -_id' })
     .select('-timer -_id -qualifications')
 
-  console.log(data)
+  if (!data || !data.length > 0) {
+    res.status(404)
+    throw new Error('No Tutor Found')
+  }
+
+  res.json(data)
+})
+
+// Student Enrollment - Get Tutor Data
+// Route: /student/enrollment/get-tutor-data
+// Method: POST
+const studentEnrollmentTutorData = asyncHandler(async (req, res) => {
+  const { grades, subjects, date } = req.body
+
+  if (!grades || !subjects || !date) {
+    res.status(400)
+    throw new Error('Please include grades, subjects && date')
+  }
+
+  const data = await TutorEnrollmentModel.find({
+    grades: grades,
+    subjects: subjects,
+    date,
+  })
+    .populate({ path: 'teacherId', select: '-_id email' })
+    .select('method time -_id')
+
+  if (!data) {
+    res.status(404)
+    throw new Error('No Tutor Found')
+  }
+
+  res.json(data)
+})
+
+// Student Enrollment - Fetch Tutor Method & Time
+// Route: /student/enrollment/get-tutor-method-time
+// Method: POST
+const fetchMethodTime = asyncHandler(async (req, res) => {
+  const { grades, subjects, date, tutor } = req.body
+  console.log(grades, subjects, date, tutor)
+
+  if (!grades || !subjects || !date || !tutor) {
+    res.status(400)
+    throw new Error('Please include grades, subjects, date & tutor email!')
+  }
+
+  const rawData = await TutorEnrollmentModel.find({
+    grades: grades,
+    subjects: subjects,
+    date,
+  }).populate({ path: 'teacherId' })
+
+  const data = rawData.filter((enrollment) => {
+    return enrollment.teacherId.email === tutor
+  })
+
+  if (!data) {
+    res.status(404)
+    throw new Error('No Tutor Found')
+  }
 
   res.json(data)
 })
@@ -32,7 +92,7 @@ const studentEnrollment = asyncHandler(async (req, res) => {
 // Method: POST
 const studentEnrollmentSave = asyncHandler(async (req, res) => {
   const { grades, subjects, date, tutor, method, time, studentId } = req.body
-
+  console.log(grades, subjects, date, tutor, method, time, studentId)
   const weekDay = generateDay(date)
 
   if (
@@ -87,6 +147,7 @@ const studentEnrollmentSave = asyncHandler(async (req, res) => {
 // Method: GET
 const currentCourses = asyncHandler(async (req, res) => {
   const { studentId } = req.body
+  console.log(studentId)
 
   if (!studentId) {
     res.status(404)
@@ -94,12 +155,7 @@ const currentCourses = asyncHandler(async (req, res) => {
   }
 
   const sEnrollments = await StudentEnrollmentModel.find({ studentId })
-  console.log(sEnrollments.length)
-  if (
-    !sEnrollments ||
-    sEnrollments.length == null ||
-    sEnrollments.length == 0
-  ) {
+  if (!sEnrollments.length > 0) {
     res.status(404)
     throw new Error('Wrong Id/ No enrollments')
   }
@@ -159,4 +215,6 @@ module.exports = {
   studentEnrollmentSave,
   currentCourses,
   paymentStatus,
+  studentEnrollmentTutorData,
+  fetchMethodTime,
 }
