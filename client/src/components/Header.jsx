@@ -56,10 +56,26 @@ const Header = ({ admin, student, tutor }) => {
               </li>
               <li class="navbar_item" id="admin_home">
                 <a
-                  onClick={() => navigate('/admin/statistics')}
+                  onClick={() => navigate('/admin/statistics/subjects-data')}
                   style={{ cursor: 'pointer' }}
                 >
                   Statistics
+                </a>
+              </li>
+              <li class="navbar_item" id="admin_home">
+                <a
+                  onClick={() => navigate('/admin/students')}
+                  style={{ cursor: 'pointer' }}
+                >
+                  Students
+                </a>
+              </li>
+              <li class="navbar_item" id="admin_home">
+                <a
+                  onClick={() => navigate('/admin/teachers')}
+                  style={{ cursor: 'pointer' }}
+                >
+                  Teachers
                 </a>
               </li>
               <li class="navbar_item" id="admin_home">

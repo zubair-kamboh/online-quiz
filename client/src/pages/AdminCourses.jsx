@@ -5,8 +5,8 @@ import '../styles/modal.css'
 const AdminCourses = () => {
   const [tutors, setTutors] = useState([])
   const [modal, setModal] = useState(false)
+  const [modalId, setModalId] = useState('')
 
-  console.log(tutors)
   const getTutors = async () => {
     try {
       const response = await fetch('http://localhost:8000/management/courses', {
@@ -53,12 +53,17 @@ const AdminCourses = () => {
             <div>
               <div className="enrollment_requests_btns">
                 <button
-                  onClick={() => setModal(true)}
+                  onClick={() => {
+                    setModal(true)
+                    setModalId(teacher)
+                  }}
                   style={{ marginBottom: 0, padding: '10px 17px' }}
                 >
                   View Details
                 </button>
-                <Modal modal={modal} teacher={teacher} setModal={setModal} />
+                {modal && (
+                  <Modal teacher={modalId} modal={modal} setModal={setModal} />
+                )}
               </div>
             </div>
           </div>
@@ -69,11 +74,15 @@ const AdminCourses = () => {
   )
 }
 
-const Modal = ({ modal, teacher, setModal }) => {
+const Modal = ({ teacher, modal, setModal }) => {
   return (
     <>
       {modal === true ? (
-        <div id="myModal" class="modal" style={{ display: 'block' }}>
+        <div
+          id={`${teacher._id} myModal`}
+          class="modal"
+          style={{ display: 'block' }}
+        >
           <div class="modal-content">
             <span class="close" onClick={() => setModal(false)}>
               &times;

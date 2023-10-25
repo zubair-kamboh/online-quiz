@@ -83,14 +83,21 @@ const courseTutors = asynHandler(async (req, res) => {
 // Route: /management/stats/subjects-data
 // GET
 const subjectsData = asynHandler(async (req, res) => {
-  const enrollments = await TutorEnrollmentModel.find()
+  const { subjects } = req.body
+
+  if (!subjects) {
+    res.status(404)
+    throw new Error('No Subject Attached!')
+  }
+
+  const enrollments = await TutorEnrollmentModel.find({ subjects })
     .populate({
       path: 'teacherId',
-      select: 'fullname -_id',
+      select: 'fullname email -_id',
     })
-    .select('grades subjects -_id')
+    .select('date method time -_id')
 
-  if (!enrollments) {
+  if (!enrollments.length > 0) {
     res.status(404)
     throw new Error('No enrollments found')
   }
@@ -98,20 +105,43 @@ const subjectsData = asynHandler(async (req, res) => {
   res.json(enrollments)
 })
 
-// Statistics - No of Tutors Each Day
-// Route: /management/stats/tutors-each-day
+// Statistics - Send Avaiable Dates
+// Route: /management/stats/tutors-available-dates
 // GET
-const tutorsEachDay = asynHandler(async (req, res) => {
-  const { days } = req.body
+const sendTutorsAvailabilityDates = asynHandler(async (req, res) => {
+  const enrollment = await TutorEnrollmentModel.find().select('date -_id')
 
-  if (!days) {
+  if (!enrollment.length > 0) {
     res.status(404)
-    throw new Error('Please select a day!')
+    throw new Error('No Tutor Found For Any Date!')
   }
 
-  const enrollment = await TutorEnrollmentModel.find({ days })
+  res.json(enrollment)
+})
+// Statistics - No of Tutors Each Day
+// Route: /management/stats/tutors-each-day
+// POST
+const tutorsEachDay = asynHandler(async (req, res) => {
+  const { date } = req.body
 
-  res.json({ tutors: enrollment.length })
+  if (!date) {
+    res.status(404)
+    throw new Error('Please select a date!')
+  }
+
+  const enrollment = await TutorEnrollmentModel.find({ date })
+    .populate({
+      path: 'teacherId',
+      select: 'fullname email -_id',
+    })
+    .select('date method time -_id')
+
+  if (!enrollment.length > 0) {
+    res.status(404)
+    throw new Error('No Tutor Found For This Date!')
+  }
+
+  res.json(enrollment)
 })
 
 // Statistics - No of Students Attending Each Session
@@ -125,9 +155,185 @@ const studentsAttendants = asynHandler(async (req, res) => {
     throw new Error('Please select a time/session!')
   }
 
-  const students = await StudentEnrollmentModel.find({ time: session })
+  const students = await StudentEnrollmentModel.find({
+    time: session,
+  })
+    .populate({
+      path: 'studentId',
+      select: 'fullname email address school -_id',
+    })
+    .select('time -_id')
 
-  res.json({ students: students.length })
+  const filteredStudents = []
+  let previousElement = null
+
+  students.length > 0 &&
+    students
+      .filter((student) => {
+        if (student.studentId.email === previousElement) {
+          return null
+        }
+
+        previousElement = student.studentId.email
+
+        return student
+      })
+      .filter((student) => filteredStudents.push(student))
+
+  if (!filteredStudents) {
+    res.status(404)
+    throw new Error('No students found!')
+  }
+
+  res.json(filteredStudents)
+})
+
+// Statistics - No of Questions Answered by Each Tutor
+// Route: /management/stats/questions-answered
+// GET
+const questionsAnswered = asynHandler(async (req, res) => {
+  const students = await StudentEnrollmentModel.find({
+    $or: [{ timer: { $gt: 0 } }],
+  })
+
+  const tutorCounts = {}
+  students.forEach((item) => {
+    const { tutor } = item
+    if (tutorCounts[tutor]) {
+      tutorCounts[tutor].timerCount++
+    } else {
+      tutorCounts[tutor] = { tutor, timerCount: 1 }
+    }
+  })
+
+  const resultArray = Object.values(tutorCounts)
+
+  res.json(resultArray)
+})
+
+// Get All Students
+// Route: /management/students
+// GET
+const getStudents = asynHandler(async (req, res) => {
+  const students = await StudentAuthModel.find()
+
+  if (!students) {
+    res.status(404)
+    throw new Error('No students found')
+  }
+
+  res.json(students)
+})
+// Get All Teachers
+// Route: /management/teachers
+// GET
+const getTeachers = asynHandler(async (req, res) => {
+  const teachers = await TeacherAuthModel.find()
+
+  if (!teachers) {
+    res.status(404)
+    throw new Error('No teadhers found')
+  }
+
+  res.json(teachers)
+})
+
+// Edit Student
+// Route: /management/student/edit
+// PUT
+const editStudent = asynHandler(async (req, res) => {
+  const { studentId, fullname, address, school } = req.body
+
+  if (!studentId || !fullname || !address || !school) {
+    res.status(404)
+    throw new Error('Please input all fields!')
+  }
+
+  const student = await StudentAuthModel.findOneAndUpdate(
+    { _id: studentId },
+    {
+      fullname,
+      address,
+      school,
+    }
+  )
+
+  if (!student) {
+    res.status(404)
+    throw new Error('No student found')
+  }
+
+  res.json({ successMsg: 'Student updated successfully!' })
+})
+
+// Edit Teacher
+// Route: /management/teacher/edit
+// PUT
+const editTeacher = asynHandler(async (req, res) => {
+  const { teacherId, fullname, address, school } = req.body
+
+  if (!teacherId || !fullname || !address || !school) {
+    res.status(404)
+    throw new Error('Please input all fields!')
+  }
+
+  const teacher = await TeacherAuthModel.findOneAndUpdate(
+    { _id: teacherId },
+    {
+      fullname,
+      address,
+      school,
+    }
+  )
+
+  if (!teacher) {
+    res.status(404)
+    throw new Error('No teacher found')
+  }
+
+  res.json({ successMsg: 'Teacher updated successfully!' })
+})
+
+// Delete Student
+// Route: /management/student/delete
+// DELETE
+const deleteStudent = asynHandler(async (req, res) => {
+  const { studentId } = req.body
+
+  if (!studentId) {
+    res.status(404)
+    throw new Error('Please input all fields!')
+  }
+
+  const student = await StudentAuthModel.findOneAndDelete({ _id: studentId })
+
+  if (!student) {
+    res.status(404)
+    throw new Error('No student found')
+  }
+
+  res.json({ successMsg: 'Student deleted successfully!' })
+})
+
+// Delete Teacher
+// Route: /management/teacher/delete
+// DELETE
+const deleteTeacher = asynHandler(async (req, res) => {
+  const { teacherId } = req.body
+
+  if (!teacherId) {
+    res.status(404)
+    throw new Error('Please input all fields!')
+  }
+
+  const teacher = await TeacherAuthModel.findOneAndDelete({ _id: teacherId })
+
+  if (!teacher) {
+    res.status(404)
+    throw new Error('No teacher found')
+  }
+
+  res.json({ successMsg: 'Teacher deleted successfully!' })
 })
 
 module.exports = {
@@ -138,4 +344,12 @@ module.exports = {
   tutorsEachDay,
   studentsAttendants,
   subjectsData,
+  sendTutorsAvailabilityDates,
+  questionsAnswered,
+  getStudents,
+  getTeachers,
+  editStudent,
+  editTeacher,
+  deleteStudent,
+  deleteTeacher,
 }

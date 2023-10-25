@@ -329,7 +329,7 @@ const StudentEnrolment = () => {
                         <td>{tutor.subjects}</td>
                         <td>{`${new Date(tutor.date).getDate()}-${
                           new Date(tutor.date).getMonth() + 1
-                        }-${new Date(tutor.date).getFullYear()}`}</td>{' '}
+                        }-${new Date(tutor.date).getFullYear()}`}</td>
                         <td>{tutor.teacherId.email}</td>
                         <td>{tutor.method}</td>
                         <td>{tutor.time}</td>

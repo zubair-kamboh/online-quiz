@@ -19,6 +19,13 @@ import EnrollmentRequests from './pages/EnrollmentRequests'
 import AdminCourses from './pages/AdminCourses'
 import AdminStatistics from './pages/AdminStatistics'
 import TutorCoursePortal from './pages/TutorCoursePortal'
+import TutorEachDay from './pages/TutorEachDay'
+import StudentsEachSession from './pages/StudentsEachSession'
+import QuestionsAnsweredEachSession from './pages/QuestionsAnsweredEachSession'
+import StudentRegistry from './pages/StudentRegistry'
+import TeacherRegistry from './pages/TeacherRegistry'
+import TutorRegistryEdit from './pages/TutorRegistryEdit'
+import StudentRegistryEdit from './pages/StudentRegistryEdit'
 
 function App() {
   return (
@@ -32,7 +39,26 @@ function App() {
             element={<EnrollmentRequests />}
           />
           <Route path="/admin/courses" element={<AdminCourses />} />
-          <Route path="/admin/statistics" element={<AdminStatistics />} />
+          <Route
+            path="/admin/statistics/subjects-data"
+            element={<AdminStatistics />}
+          />
+          <Route
+            path="/admin/statistics/tutors-each-day"
+            element={<TutorEachDay />}
+          />
+          <Route
+            path="/admin/statistics/students-each-session"
+            element={<StudentsEachSession />}
+          />
+          <Route
+            path="/admin/statistics/question-answered-in-each-session"
+            element={<QuestionsAnsweredEachSession />}
+          />
+          <Route path="/admin/students" element={<StudentRegistry />} />
+          <Route path="/admin/teachers" element={<TeacherRegistry />} />
+          <Route path="/admin/teacher/edit" element={<TutorRegistryEdit />} />
+          <Route path="/admin/student/edit" element={<StudentRegistryEdit />} />
           <Route path="/student/login" element={<StudentLogin />} />
           <Route path="/student/register" element={<StudentRegistration />} />
           <Route path="/student/profile" element={<StudentProfile />} />

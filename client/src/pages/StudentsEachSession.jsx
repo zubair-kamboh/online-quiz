@@ -3,40 +3,40 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import AdminStatisticsSideButtons from '../components/AdminStatisticsSideButtons'
 
-const AdminStatistics = () => {
-  const [subject, setSubject] = useState('')
-  const [subjectsData, setSubjectsData] = useState([])
+const StudentdsEachSession = () => {
+  const [session, setSession] = useState('')
+  const [students, setStudents] = useState([])
 
   useEffect(() => {
-    if (subject) {
-      handleSubjectsData()
+    if (session) {
+      handleSessionStudents()
     }
-  }, [subject])
+  }, [session])
 
   const handleDropdownChange = async (e) => {
-    setSubject(e.target.value)
+    setSession(e.target.value)
   }
 
-  const handleSubjectsData = async () => {
+  const handleSessionStudents = async () => {
     try {
       const response = await fetch(
-        'http://localhost:8000/management/stats/subjects-data',
+        'http://localhost:8000/management/stats/students-attendants',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ subjects: subject }),
+          body: JSON.stringify({ session }),
         }
       )
 
       const data = await response.json()
 
       if (response.ok) {
-        setSubjectsData(data)
+        console.log(data)
+        setStudents(data)
       } else {
         alert(data.message)
-        setSubjectsData([])
       }
     } catch (error) {
       console.error('Error:', error)
@@ -47,7 +47,7 @@ const AdminStatistics = () => {
     <>
       <Header admin={true} />
       <div class="apply_container">
-        <h1>Admin Statistics - Subjects Data</h1>
+        <h1>Admin Statistics - Students Each Session</h1>
       </div>
       <div class="statistics_container">
         <AdminStatisticsSideButtons />
@@ -65,13 +65,10 @@ const AdminStatistics = () => {
               }}
             >
               <option disabled selected value>
-                Select a Subject
+                Select a Session
               </option>
-              <option value="Mathematics">Mathematics</option>
-              <option value="Physics">Physics</option>
-              <option value="Chemistry">Chemistry</option>
-              <option value="Biology">Biology</option>
-              <option value="English">English</option>
+              <option value="03:30 - 04:30">03:30 - 04:30</option>
+              <option value="04:30 - 05:30">04:30 - 05:30</option>
             </select>
           </div>
           <div
@@ -81,22 +78,18 @@ const AdminStatistics = () => {
             <div class="tutor_table" style={{ width: '100%' }}>
               <table class="tutor_timetable" style={{ width: '100%' }}>
                 <tr>
-                  <th>Tutor Name</th>
-                  <th>Tutor Email</th>
-                  <th>Date</th>
-                  <th>Method</th>
-                  <th>Timing</th>
+                  <th>Student Name</th>
+                  <th>Email</th>
+                  <th>Address</th>
+                  <th>School</th>
                 </tr>
-                {subjectsData.length > 0 ? (
-                  subjectsData.map((subject) => (
+                {students.length > 0 ? (
+                  students.map((student) => (
                     <tr>
-                      <td>{subject.teacherId.fullname}</td>
-                      <td>{subject.teacherId.email}</td>
-                      <td>{`${new Date(subject.date).getDate()}-${
-                        new Date(subject.date).getMonth() + 1
-                      }-${new Date(subject.date).getFullYear()}`}</td>{' '}
-                      <td>{subject.method}</td>
-                      <td>{subject.time}</td>
+                      <td>{student.studentId.fullname}</td>
+                      <td>{student.studentId.email}</td>
+                      <td>{student.studentId.address}</td>
+                      <td>{student.studentId.school}</td>
                     </tr>
                   ))
                 ) : (
@@ -112,4 +105,4 @@ const AdminStatistics = () => {
   )
 }
 
-export default AdminStatistics
+export default StudentdsEachSession

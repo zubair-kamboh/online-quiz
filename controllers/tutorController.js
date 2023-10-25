@@ -65,16 +65,16 @@ const listTutorEnrollments = asynHandler(async (req, res) => {
 
 // Courses Portal - Courses Tutoring
 // Route: /tutor/course-portal/courses-tutoring
-// Method: GET
+// Method: POST
 const coursesTutoring = asynHandler(async (req, res) => {
-  const { email } = req.body
+  const { tutorEmail } = req.body
 
-  if (!email) {
+  if (!tutorEmail) {
     res.status(400)
     throw new Error('No email attached')
   }
 
-  const courses = await TeacherAuthModel.find({ email })
+  const courses = await TeacherAuthModel.find({ email: tutorEmail })
     .populate({
       path: 'enrollment',
       select: 'grades subjects -_id',
@@ -91,7 +91,7 @@ const coursesTutoring = asynHandler(async (req, res) => {
 
 // Courses Portal - Total Students Enrolled
 // Route: /tutor/course-portal/total-students-enrolled
-// Method: GET
+// Method: POST
 const totalStudentsEnrolled = asynHandler(async (req, res) => {
   const { tutorEmail } = req.body
 
@@ -112,7 +112,7 @@ const totalStudentsEnrolled = asynHandler(async (req, res) => {
 
 // Courses Portal - Average Students Enrolled
 // Route: /tutor/course-portal/average-students-enrolled
-// Method: GET
+// Method: POST
 const averageStudentsEnrolled = asynHandler(async (req, res) => {
   const { tutorEmail, tutorId } = req.body
 
@@ -122,6 +122,25 @@ const averageStudentsEnrolled = asynHandler(async (req, res) => {
   }
 
   const students = await StudentEnrollmentModel.find({ tutor: tutorEmail })
+  const teachers = await TutorEnrollmentModel.find({ teacherId: tutorId })
+
+  // total_students/total_subjects
+
+  const teacherSubjects = []
+  let previousElement = null
+  const filteredSubjects =
+    teachers.length > 0 &&
+    teachers
+      .filter((teacher) => {
+        if (teacher.subjects === previousElement) {
+          return null
+        }
+
+        previousElement = teacher.subjects
+
+        return teacher.subjects
+      })
+      .filter((subjects) => teacherSubjects.push(subjects))
 
   if (!students) {
     res.status(404)
@@ -139,7 +158,7 @@ const averageStudentsEnrolled = asynHandler(async (req, res) => {
     res.status(200).json({ averageStudents: totalStudents / courses.length })
   } else {
     res.status(404)
-    throw new Error('wrong email or no course enrollment')
+    throw new Error('No Enrollments')
   }
 })
 
@@ -147,26 +166,26 @@ const averageStudentsEnrolled = asynHandler(async (req, res) => {
 // Route: /tutor/course-portal/average-time
 // Method: GET
 const averageTime = asynHandler(async (req, res) => {
-  const { tutorEmail, tutorId } = req.body
+  const { tutorEmail } = req.body
 
-  if (!tutorEmail || !tutorId) {
+  if (!tutorEmail) {
     res.status(400)
-    throw new Error('No tutor email or id attached')
+    throw new Error('No tutor email attached')
   }
+
+  // formula: total_seconds/total_students
 
   const students = await StudentEnrollmentModel.find({ tutor: tutorEmail })
 
-  if (students.length > 0) {
-    const totalStudents = students.length
-    const totalTime = 0
-    // totaltime / totalstudnets
-
-    const time = await TutorEnrollmentModel.aggregate([
-      { $group: { _id: null, total: { $sum: '$timer' } } },
-    ])
-
-    res.json({ averageTime: time[0].total / totalStudents })
+  if (!students.length > 0) {
+    res.status(404)
+    throw new Error('No Enrollments Found')
   }
+
+  let totalSeconds = 0
+  students.forEach((student) => (totalSeconds += student.timer))
+
+  res.json({ averageTimeToAnswer: totalSeconds / students.length })
 })
 
 // Tutorial Portal - Get Students
@@ -174,7 +193,6 @@ const averageTime = asynHandler(async (req, res) => {
 // Method: POST
 const getStudents = asynHandler(async (req, res) => {
   const { teacherEmail, subjects, grades } = req.body
-  console.log(teacherEmail, subjects, grades)
   if (!teacherEmail || !subjects || !grades) {
     res.status(400)
     throw new Error('No teacher email, grades or subjects attached')
@@ -201,6 +219,7 @@ const getStudents = asynHandler(async (req, res) => {
 // Method: POST
 const saveTimeAndQuestion = asynHandler(async (req, res) => {
   const { timer, tutorEmail, studentEnrollmentID, question } = req.body
+
   if (!timer || !tutorEmail || !studentEnrollmentID || !question) {
     res.status(400)
     throw new Error('Time, Tutor Id, Question and Enrollment Id is requered!')
