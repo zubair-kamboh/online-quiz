@@ -51,7 +51,7 @@ const QuestionsAnsweredEachSession = () => {
               <table class="tutor_timetable" style={{ width: '100%' }}>
                 <tr>
                   <th>Tutor Email</th>
-                  <th>Time Taken</th>
+                  <th>Questions Answered</th>
                 </tr>
                 {tutors.length > 0 ? (
                   tutors.map((tutor) => {

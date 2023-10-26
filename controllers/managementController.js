@@ -148,44 +148,71 @@ const tutorsEachDay = asynHandler(async (req, res) => {
 // Route: /management/stats/students-attendants
 // GET
 const studentsAttendants = asynHandler(async (req, res) => {
-  const { session } = req.body
+  // const { session } = req.body
 
-  if (!session) {
-    res.status(404)
-    throw new Error('Please select a time/session!')
-  }
+  // if (!session) {
+  //   res.status(404)
+  //   throw new Error('Please select a time/session!')
+  // }
 
-  const students = await StudentEnrollmentModel.find({
-    time: session,
-  })
-    .populate({
-      path: 'studentId',
-      select: 'fullname email address school -_id',
-    })
-    .select('time -_id')
+  const students = await StudentEnrollmentModel.find().populate('studentId')
 
-  const filteredStudents = []
-  let previousElement = null
+  const data = [
+    // ... your given array here
+  ]
 
-  students.length > 0 &&
-    students
-      .filter((student) => {
-        if (student.studentId.email === previousElement) {
-          return null
-        }
+  const result = students.reduce((acc, item) => {
+    const { tutor, subjects, date, time } = item
+    const key = tutor + subjects + date + time
+    const existingItem = acc.find((entry) => entry.key === key)
 
-        previousElement = student.studentId.email
-
-        return student
+    if (existingItem) {
+      existingItem.totalStudents++
+    } else {
+      acc.push({
+        tutor,
+        subjects,
+        date,
+        time,
+        totalStudents: 1,
+        key,
       })
-      .filter((student) => filteredStudents.push(student))
+    }
 
-  if (!filteredStudents) {
-    res.status(404)
-    throw new Error('No students found!')
-  }
+    return acc
+  }, [])
 
-  res.json(filteredStudents)
+  const formattedResult = result.map((item) => ({
+    tutor: item.tutor,
+    subjects: item.subjects,
+    date: item.date,
+    time: item.time,
+    totalStudents: item.totalStudents,
+  }))
+
+  res.json(formattedResult)
+
+  // res.json(students)
+  // const filteredStudents = []
+  // let previousElement = null
+
+  // students.length > 0 &&
+  //   students
+  //     .filter((student) => {
+  //       if (student.studentId.email === previousElement) {
+  //         return null
+  //       }
+
+  //       previousElement = student.studentId.email
+
+  //       return student
+  //     })
+  //     .filter((student) => filteredStudents.push(student))
+
+  // if (!filteredStudents) {
+  //   res.status(404)
+  //   throw new Error('No students found!')
+  // }
 })
 
 // Statistics - No of Questions Answered by Each Tutor
