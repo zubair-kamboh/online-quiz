@@ -17,6 +17,10 @@ app.use(
 app.use(cors())
 
 // router
+
+app.get('/', (req, res) => {
+  res.json({ message: 'hello' })
+})
 app.use('/api/auth', require('./routes/authRoutes'))
 app.use('/payment', require('./routes/paymentRoutes'))
 app.use('/tutor', require('./routes/tutorRoutes'))

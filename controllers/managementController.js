@@ -148,18 +148,7 @@ const tutorsEachDay = asynHandler(async (req, res) => {
 // Route: /management/stats/students-attendants
 // GET
 const studentsAttendants = asynHandler(async (req, res) => {
-  // const { session } = req.body
-
-  // if (!session) {
-  //   res.status(404)
-  //   throw new Error('Please select a time/session!')
-  // }
-
   const students = await StudentEnrollmentModel.find().populate('studentId')
-
-  const data = [
-    // ... your given array here
-  ]
 
   const result = students.reduce((acc, item) => {
     const { tutor, subjects, date, time } = item
@@ -191,28 +180,6 @@ const studentsAttendants = asynHandler(async (req, res) => {
   }))
 
   res.json(formattedResult)
-
-  // res.json(students)
-  // const filteredStudents = []
-  // let previousElement = null
-
-  // students.length > 0 &&
-  //   students
-  //     .filter((student) => {
-  //       if (student.studentId.email === previousElement) {
-  //         return null
-  //       }
-
-  //       previousElement = student.studentId.email
-
-  //       return student
-  //     })
-  //     .filter((student) => filteredStudents.push(student))
-
-  // if (!filteredStudents) {
-  //   res.status(404)
-  //   throw new Error('No students found!')
-  // }
 })
 
 // Statistics - No of Questions Answered by Each Tutor
@@ -251,6 +218,7 @@ const getStudents = asynHandler(async (req, res) => {
 
   res.json(students)
 })
+
 // Get All Teachers
 // Route: /management/teachers
 // GET
@@ -357,7 +325,7 @@ const deleteTeacher = asynHandler(async (req, res) => {
   }
 
   const teacher = await TeacherAuthModel.findOneAndDelete({ _id: teacherId })
-  const deletedStudents = await TutorEnrollmentModel.deleteMany({
+  const deletedTeachers = await TutorEnrollmentModel.deleteMany({
     teacherId,
   })
 

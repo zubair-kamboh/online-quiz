@@ -14,17 +14,6 @@ const payment = asynHandler(async (req, res) => {
     studentId,
   } = req.body
 
-  console.log(
-    cardnumber,
-    cardtype,
-    expirymonth,
-    expiryyear,
-    ccv,
-    validity,
-    price,
-    studentId
-  )
-
   if (
     !cardnumber ||
     !cardtype ||
