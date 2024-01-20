@@ -4,6 +4,7 @@ const connection = require('./config/db')
 const errorHandler = require('./middlewares/errorHandler')
 const app = express()
 const cors = require('cors')
+const path = require('path')
 
 // body parser middlewares
 app.use(express.json())
@@ -18,9 +19,11 @@ app.use(cors())
 
 // router
 
-app.get('/', (req, res) => {
-  res.json({ message: 'hello' })
+app.use(express.static(path.join(__dirname, 'client', 'build')))
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
 })
+
 app.use('/api/auth', require('./routes/authRoutes'))
 app.use('/payment', require('./routes/paymentRoutes'))
 app.use('/tutor', require('./routes/tutorRoutes'))
