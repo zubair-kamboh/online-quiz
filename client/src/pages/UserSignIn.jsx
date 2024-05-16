@@ -5,24 +5,23 @@ import logininput1 from '../images/login-input-1.png'
 import logininput2 from '../images/login-input-2.png'
 import logomain from '../images/logo-main.jpg'
 import { Link, useNavigate } from 'react-router-dom'
-
-const AdminSignIn = () => {
+const UserSignIn = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [admin, setAdmin] = useState({})
+  const [user, setUser] = useState({})
   const navigate = useNavigate()
 
   useEffect(() => {
-    const admin = JSON.parse(localStorage.getItem('admin'))
-    if (admin) {
-      navigate('/admin/dashboard')
+    const user = JSON.parse(localStorage.getItem('user'))
+    if (user) {
+      navigate('/user/dashboard')
     }
   }, [])
 
   const handleSignIn = async (e) => {
     e.preventDefault()
     try {
-      const response = await fetch('http://localhost:8000/auth/admin/signin', {
+      const response = await fetch('http://localhost:8000/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,9 +34,9 @@ const AdminSignIn = () => {
       if (response.ok) {
         // Sign-in successful
         alert(data.message)
-        localStorage.setItem('admin', JSON.stringify(data.admin))
-        setAdmin(data.admin)
-        navigate('/admin/dashboard', { state: admin })
+        localStorage.setItem('user', JSON.stringify(data.user))
+        setUser(data.user)
+        navigate('/user/dashboard')
       } else {
         alert(data.message)
       }
@@ -51,14 +50,9 @@ const AdminSignIn = () => {
       <div className="container mx-auto none]">
         <div className="p-6 flex items-center justify-between">
           {/* <img src="./images/logo.png" class="h-12" alt="" /> */}
-          <img
-            src={logomain}
-            alt=""
-            className="w-20 h-auto"
-            style={{ width: '100px' }}
-          />
+          <img src={logomain} alt="" style={{ width: '100px' }} />
           <div className="flex-1 text-center me-20">
-            <h1 className="text-4xl font-bold">ADMIN LOGIN</h1>
+            <h1 className="text-4xl font-bold">USER LOGIN</h1>
           </div>
         </div>
         <div className="p-10 w-[800px] mx-auto mt-2 rounded-3xl shadow-2xl flex flex-col md:flex-row justify-center items-center">
@@ -77,7 +71,7 @@ const AdminSignIn = () => {
                     type="text"
                     placeholder="Enter your email"
                     style={{ outline: 'none' }}
-                    name="email"
+                    value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
@@ -91,18 +85,31 @@ const AdminSignIn = () => {
                     type="text"
                     placeholder="Enter your password"
                     style={{ outline: 'none' }}
-                    name="password"
+                    value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-
-                <button className="text-white bg-blue py-[6px] border-[1px] border-[#000] px-5 rounded-[10px] mt-2">
+                <div className="mt-[3px]">
+                  <a className="text-[#646464] text-sm" href="#">
+                    Forget Password?
+                  </a>
+                </div>
+                <button
+                  type="submit"
+                  className="text-white bg-blue py-[6px] border-[1px] border-[#000] px-5 rounded-[10px] mt-2"
+                >
                   LOGIN
                 </button>
                 <p className="text-center pt-2">
-                  Want to login as a User?{' '}
-                  <Link to="/user/login" className="text-blue" type="submit">
-                    SIGN IN
+                  Not having account?
+                  <Link to={'/user/signup'} className="text-blue">
+                    SIGN UP
+                  </Link>
+                </p>
+                <p className="text-center pt-2">
+                  Are you an Admin?
+                  <Link to={'/admin/login'} className="text-blue">
+                    LOGIN
                   </Link>
                 </p>
               </div>
@@ -119,4 +126,4 @@ const AdminSignIn = () => {
   )
 }
 
-export default AdminSignIn
+export default UserSignIn
