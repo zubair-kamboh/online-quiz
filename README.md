@@ -1,5 +1,23 @@
-Bright Boost Project
+Online Quiz Project Installation
 
-To install this project just download the zip folder, open the folder in vs code. firstly you have to install all the frontend/backend packages. you can do it by going into folder "brightboost-master" than click "npm install", after this step finishes than go to client folder and hit "npm install". After the installation you can run this project by going into client folder and than hit "npm run dev". Make sure you install nodejs and mongodbcompass. For testing the api use postman
+Download and install Nodejs from here: https://nodejs.org/en/download.
 
-![image](https://github.com/zubair-kamboh/bright-boost/assets/70833594/7e12ff7c-0cf9-4790-afeb-9d9bf0436cd0)
+Download and install Mongodb Community Server from here: https://www.mongodb.com/try/download/community
+
+Download and install Mongodb Compassfrom here: https://www.mongodb.com/try/download/compass
+
+Than go to your project "root" directory and run command "npm install" in terminal.
+
+After installation of packages run "npm run dev" in terminal.
+
+After its finished Than open a new terminal in root directory, then go to "client" folder and run command "npm install" in terminal.
+
+After installation of packages is finished than run "npm start" in client folder.
+
+Now run mongodb compass that you installed earlier and put "mongodb://localhost:27017" in New Connection URL and click Connect button.
+
+![image](<img width="959" alt="image" src="https://github.com/zubair-kamboh/online-quiz/assets/70833594/13293b71-a839-4c6a-a8f0-3228d4eeb7d7">
+)
+
+Go to "http://localhost:3000/admin/login" in browser.
+
