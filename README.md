@@ -6,6 +6,10 @@ Download and install Mongodb Community Server from here: https://www.mongodb.com
 
 Download and install Mongodb Compassfrom here: https://www.mongodb.com/try/download/compass
 
+Download this project.
+
+Unzip the project.
+
 Than go to your project "root" directory and run command "npm install" in terminal.
 
 After installation of packages run "npm run dev" in terminal.
