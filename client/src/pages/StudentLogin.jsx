@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-import logo from '../images/flogo.png'
 import { useNavigate } from 'react-router-dom'
+import logo from '../images/flogo.png'
 import HomePageDescription from '../components/HomePageDescription'
 
-const AdminSignin = () => {
+const StudentLogin = () => {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   useEffect(() => {
-    const admin = localStorage.getItem('admin')
-    if (admin) {
-      navigate('/admin/profile')
+    const student = localStorage.getItem('student')
+    if (student) {
+      navigate('/student/profile')
     }
   }, [])
-
-  const navigate = useNavigate()
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value)
@@ -31,7 +30,7 @@ const AdminSignin = () => {
 
     try {
       const response = await fetch(
-        'http://localhost:8000/api/auth/admin/signin',
+        'http://localhost:8000/api/auth/student/signin',
         {
           method: 'POST',
           headers: {
@@ -44,9 +43,9 @@ const AdminSignin = () => {
       const data = await response.json()
 
       if (response.ok) {
-        localStorage.setItem('admin', JSON.stringify(data.admin))
+        localStorage.setItem('student', JSON.stringify(data.student))
         alert(data.successMsg)
-        navigate('/admin/profile')
+        navigate('/student/profile')
       } else {
         alert(data.message)
       }
@@ -58,32 +57,37 @@ const AdminSignin = () => {
   return (
     <>
       <Header />
-
       <div class="home_container">
         <HomePageDescription />
-        <div className="home_container_right">
-          <form className="signin_container_form" onSubmit={handleSubmit}>
+        <div class="home_container_right">
+          <form class="signin_container_form" onSubmit={handleSubmit}>
             <img src={logo} alt="logo.png" />
-            <h1>Admin Sign In</h1>
+            <h1>Student Sign In</h1>
             <input
               type="text"
               name="email"
               id="uname"
               placeholder="Email"
+              required
               value={email}
               onChange={handleEmailChange}
-              required
             />
             <input
               type="password"
-              name="pass"
+              name="password"
               id="pass"
               placeholder="Password"
+              required
               value={password}
               onChange={handlePasswordChange}
-              required
             />
             <button type="submit">Sign In</button>
+            <a
+              onClick={() => navigate('/student/register')}
+              style={{ cursor: 'pointer' }}
+            >
+              Not Registered? SignUp!
+            </a>
           </form>
         </div>
       </div>
@@ -92,4 +96,4 @@ const AdminSignin = () => {
   )
 }
 
-export default AdminSignin
+export default StudentLogin

@@ -1,0 +1,10 @@
+.datepicker input {
+  width: 100%;
+  padding: 8px 20px;
+  marginbottom: 20px;
+}
+
+.datepicker,
+.datepicker div {
+  /* width: 100%; */
+}

@@ -1,0 +1,251 @@
+.apply_container {
+  background-color: rgb(253, 237, 214);
+  margin: 30px auto;
+  padding: 30px;
+  width: 50%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.statistics_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.statistics_container .statistics_buttons {
+  background-color: rgb(253, 237, 214);
+  margin: 20px 20px;
+  padding: 30px;
+  width: 20%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.statistics_container .statistics_display {
+  background-color: rgb(253, 237, 214);
+  margin: 20px 20px;
+  padding: 30px;
+  width: 60%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.statistics_container .statistics_buttons .statistics_input {
+  width: 250px;
+  font-size: 20px;
+  padding: 10px;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #ccc;
+  background-color: rgba(255, 205, 135, 0);
+}
+
+.statistics_container .statistics_btn {
+  display: flex;
+  flex-direction: column;
+}
+
+.statistics_container .statistics_btn button {
+  background-color: rgb(230, 173, 107);
+  margin: 15px 0;
+  font-size: 20px;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: rgb(0, 0, 0);
+}
+
+.statistics_container .statistics_btn button:hover {
+  background-color: rgb(234, 125, 0);
+}
+
+.statistics_container .statistics_buttons .statistics_btn .apply_input {
+  width: 250px;
+  font-size: 20px;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  background-color: rgba(255, 205, 135, 0);
+}
+
+.apply_container h1 {
+  text-align: center;
+  color: rgb(0, 0, 0);
+}
+
+.apply_container .apply_row {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 15px;
+}
+
+.apply_container .apply_row .apply_input {
+  width: 250px;
+  font-size: 20px;
+  padding: 10px;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #ccc;
+  background-color: rgba(255, 205, 135, 0);
+}
+
+.apply_container .apply_row .input_option {
+  width: 250px;
+  padding: 10px;
+}
+
+.apply_container .apply_row #studate {
+  width: 250px;
+  font-size: 20px;
+  padding: 10px;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #ccc;
+  background-color: rgba(255, 205, 135, 0);
+}
+
+.apply_container .apply_btn {
+  display: flex;
+  flex-direction: column;
+}
+
+.apply_container .apply_btn button {
+  background-color: rgb(230, 173, 107);
+  margin: 15px 0;
+  font-size: 20px;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: rgb(0, 0, 0);
+}
+
+.apply_container .apply_btn button:hover {
+  background-color: rgb(234, 125, 0);
+}
+
+.tutorial_container {
+  background-color: rgb(253, 237, 214);
+  margin: 30px auto;
+  padding: 30px;
+  width: 50%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.tutorial_container .tutorial_btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.tutorial_container .tutorial_btn button {
+  background-color: rgb(230, 173, 107);
+  margin: 15px 0;
+  font-size: 20px;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: rgb(0, 0, 0);
+}
+.get_students_btn button {
+  background-color: rgb(230, 173, 107);
+  margin: 15px 0;
+  font-size: 18px;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: rgb(0, 0, 0);
+  width: 100%;
+}
+
+.tutorial_container .tutorial_btn button:hover {
+  background-color: rgb(234, 125, 0);
+}
+
+.tutorial_container p {
+  font-size: 20px;
+}
+
+/*=============== APPLYPROFILE.HTML ===============*/
+
+.profile_container {
+  background-color: rgb(253, 237, 214);
+  margin: 30px auto;
+  padding: 30px;
+  width: 50%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.tutor_profile_header {
+  text-align: center;
+  color: rgb(0, 0, 0);
+}
+
+.profile_container_rows {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 20px;
+}
+
+.profile_container_rows h3 {
+  width: 150px;
+  margin: 5px;
+}
+
+.profile_container .profile_container_rows p {
+  margin: 0;
+}
+
+.profile_container .profile_container_rows {
+  display: flex;
+  justify-content: left;
+}
+
+/*=============== PAYMENTPORTAL ===============*/
+
+.payment_container .payment_container_rows {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payment_container .payment_container_rows p {
+  font-size: 20px;
+}
+
+/*=============== TIMETABLE ===============*/
+
+.apply_container .tutor_table {
+  display: flex;
+}
+
+.apply_container .tutor_timetable {
+  background-color: #ffffffb7;
+  margin: auto;
+  border: 1px solid black;
+}
+
+.tutor_timetable {
+  text-align: center;
+}
+
+.tutor_timetable td,
+.tutor_timetable {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.tutor_timetable th {
+  padding: 12px;
+  text-align: center;
+  background-color: rgb(234, 125, 0);
+  color: black;
+}
+
+/*=============== TUTORCOURSEPORTAL ===============*/

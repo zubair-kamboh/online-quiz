@@ -1,103 +1,83 @@
 import './App.css'
-import AdminSignIn from './pages/AdminSignIn'
-import './index.css'
-import './dashboard.css'
+import './styles/style.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import UserSignIn from './pages/UserSignIn'
-import UserSignUp from './pages/UserSignUp'
-import UserDashboard from './pages/UserDashboard'
-import CPPHomePage from './pages/CPPHomePage'
-import CPPAnnouncementPage from './pages/CPPAnnouncementPage'
-import CPPSyllabusPage from './pages/CPPSyllabusPage'
-import CPPModulePage from './pages/CPPModulePage'
-import CPPQuizzesPage from './pages/CPPQuizzesPage'
-import CPPQuiz from './pages/CPPQuiz'
-import CPPGrades from './pages/CPPGrades'
-import AdminDashboard from './pages/AdminDashboard'
-import AdminAnnouncement from './pages/AdminAnnouncement'
-import AdminSyllabus from './pages/AdminSyllabus'
-import AdminModule from './pages/AdminModule'
-import AdminQuiz from './pages/AdminQuiz'
-import PythonModulePage from './pages/PythonModulePage'
-import PythonQuizzesPage from './pages/PythonQuizzesPage'
-import PythonQuiz from './pages/PythonQuiz'
-import PythonGrades from './pages/PythonGrades'
-import JavaHomePage from './pages/JavaHomePage'
-import JavaAnnouncementPage from './pages/JavaAnnouncementPage'
-import JavaSyllabusPage from './pages/JavaSyllabusPage'
-import JavaModulePage from './pages/JavaModulePage'
-import JavaQuizzesPage from './pages/JavaQuizzesPage'
-import JavaGrades from './pages/JavaGrades'
-import PythonHomePage from './pages/PythonHomePage'
-import PythonAnnouncementPage from './pages/PythonAnnouncementPage'
-import PythonSyllabusPage from './pages/PythonSyllabusPage'
-import JavaQuiz from './pages/JavaQuiz'
+import StudentLogin from './pages/StudentLogin'
+import StudentRegistration from './pages/StudentRegistration'
+import TutorLogin from './pages/TutorLogin'
+import TutorRegistration from './pages/TutorRegistration'
+import AdminProfile from './pages/AdminProfile'
+import AdminSignin from './pages/AdminSignin'
+import StudentProfile from './pages/StudentProfile'
+import TutorProfile from './pages/TutorProfile'
+import Payment from './pages/Payment'
+import StudentEnrolment from './pages/StudentEnrolment'
+import StudentCoursePortal from './pages/StudentCoursePortal'
+import TutorTutorialPortal from './pages/TutorTutorialPortal'
+import PaymentStatus from './pages/PaymentStatus'
+import TutorEnrollment from './pages/TutorEnrollment'
+import EnrollmentRequests from './pages/EnrollmentRequests'
+import AdminCourses from './pages/AdminCourses'
+import AdminStatistics from './pages/AdminStatistics'
+import TutorCoursePortal from './pages/TutorCoursePortal'
+import TutorEachDay from './pages/TutorEachDay'
+import StudentsEachSession from './pages/StudentsEachSession'
+import QuestionsAnsweredEachSession from './pages/QuestionsAnsweredEachSession'
+import StudentRegistry from './pages/StudentRegistry'
+import TeacherRegistry from './pages/TeacherRegistry'
+import TutorRegistryEdit from './pages/TutorRegistryEdit'
+import StudentRegistryEdit from './pages/StudentRegistryEdit'
 
 function App() {
   return (
     <div className="app">
       <Router>
         <Routes>
-          <Route path="/admin/login" element={<AdminSignIn />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/login" element={<AdminSignin />} />
+          <Route path="/admin/profile" element={<AdminProfile />} />
           <Route
-            path="/admin/announcement-page"
-            element={<AdminAnnouncement />}
+            path="/admin/enrollment-requests"
+            element={<EnrollmentRequests />}
           />
-          <Route path="/admin/syllabus-page" element={<AdminSyllabus />} />
-          <Route path="/admin/module-page" element={<AdminModule />} />
-          <Route path="/admin/quizzes-page" element={<AdminQuiz />} />
-
-          <Route path="/user/login" element={<UserSignIn />} />
-          <Route path="/user/signup" element={<UserSignUp />} />
-          <Route path="/user/dashboard" element={<UserDashboard />} />
-          <Route path="/user/cpp-home-page" element={<CPPHomePage />} />
+          <Route path="/admin/courses" element={<AdminCourses />} />
           <Route
-            path="/user/cpp-announcement-page"
-            element={<CPPAnnouncementPage />}
-          />
-          <Route path="/user/cpp-syllabus-page" element={<CPPSyllabusPage />} />
-          <Route path="/user/cpp-module-page" element={<CPPModulePage />} />
-          <Route path="/user/cpp-quizzes-page" element={<CPPQuizzesPage />} />
-          <Route path="/user/cpp-quizzes-page/quiz" element={<CPPQuiz />} />
-          <Route path="/user/cpp-grades-page" element={<CPPGrades />} />
-
-          <Route path="/user/python-home-page" element={<PythonHomePage />} />
-          <Route
-            path="/user/python-announcement-page"
-            element={<PythonAnnouncementPage />}
+            path="/admin/statistics/subjects-data"
+            element={<AdminStatistics />}
           />
           <Route
-            path="/user/python-syllabus-page"
-            element={<PythonSyllabusPage />}
+            path="/admin/statistics/tutors-each-day"
+            element={<TutorEachDay />}
           />
           <Route
-            path="/user/python-module-page"
-            element={<PythonModulePage />}
+            path="/admin/statistics/students-each-session"
+            element={<StudentsEachSession />}
           />
           <Route
-            path="/user/python-quizzes-page"
-            element={<PythonQuizzesPage />}
+            path="/admin/statistics/question-answered-in-each-session"
+            element={<QuestionsAnsweredEachSession />}
           />
+          <Route path="/admin/students" element={<StudentRegistry />} />
+          <Route path="/admin/teachers" element={<TeacherRegistry />} />
+          <Route path="/admin/teacher/edit" element={<TutorRegistryEdit />} />
+          <Route path="/admin/student/edit" element={<StudentRegistryEdit />} />
+          <Route path="/student/login" element={<StudentLogin />} />
+          <Route path="/student/register" element={<StudentRegistration />} />
+          <Route path="/student/profile" element={<StudentProfile />} />
+          <Route path="/student/payment" element={<Payment />} />
+          <Route path="/student/payment-status" element={<PaymentStatus />} />
+          <Route path="/student/enrollment" element={<StudentEnrolment />} />
           <Route
-            path="/user/python-quizzes-page/quiz"
-            element={<PythonQuiz />}
+            path="/student/course-portal"
+            element={<StudentCoursePortal />}
           />
-          <Route path="/user/python-grades-page" element={<PythonGrades />} />
-
-          <Route path="/user/java-home-page" element={<JavaHomePage />} />
+          <Route path="/tutor/login" element={<TutorLogin />} />
+          <Route path="/tutor/register" element={<TutorRegistration />} />
+          <Route path="/tutor/profile" element={<TutorProfile />} />
+          <Route path="/tutor/course-portal" element={<TutorCoursePortal />} />
           <Route
-            path="/user/java-announcement-page"
-            element={<JavaAnnouncementPage />}
+            path="/tutor/tutorial-portal"
+            element={<TutorTutorialPortal />}
           />
-          <Route
-            path="/user/java-syllabus-page"
-            element={<JavaSyllabusPage />}
-          />
-          <Route path="/user/java-module-page" element={<JavaModulePage />} />
-          <Route path="/user/java-quizzes-page" element={<JavaQuizzesPage />} />
-          <Route path="/user/java-quizzes-page/quiz" element={<JavaQuiz />} />
-          <Route path="/user/java-grades-page" element={<JavaGrades />} />
+          <Route path="/tutor/enrollment" element={<TutorEnrollment />} />
         </Routes>
       </Router>
     </div>
