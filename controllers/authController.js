@@ -1,208 +1,130 @@
-const asynHandler = require('express-async-handler')
-const asyncHandler = require('express-async-handler')
-const StudentAuthModel = require('../models/StudentAuthModel')
-const { TeacherAuthModel } = require('../models/TeacherAuthModel')
+const User = require('../models/user')
+const Admin = require('../models/admin')
 
-const AdminSchema = require('../models/AdminAuthModel')
+exports.signup = async (req, res) => {
+  try {
+    const {
+      fullName,
+      contactNumber,
+      username,
+      email,
+      address,
+      state,
+      pinCode,
+      password,
+    } = req.body
 
-// Student SIGNUP
-const studentSignUp = asynHandler(async (req, res) => {
-  const { fullname, address, school, email, password } = req.body
+    if (
+      !fullName ||
+      !contactNumber ||
+      !username ||
+      !email ||
+      !address ||
+      !state ||
+      !pinCode ||
+      !password
+    ) {
+      return res.status(400).json({ message: 'All fields are required!' })
+    }
 
-  if (!fullname || !address || !school || !email || !password) {
-    res.status(400)
-    throw new Error('Please include all fields')
+    // Check if the email is already registered
+    let existingUser = await User.findOne({ email })
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already exists' })
+    }
+
+    // Create a new user with plain text password
+    const user = new User({
+      fullName,
+      contactNumber,
+      username,
+      email,
+      address,
+      state,
+      pinCode,
+      password, // Storing plain text password
+    })
+
+    await user.save()
+
+    res.status(201).json({ message: 'User created successfully' })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
   }
+}
 
-  const emailExist = await StudentAuthModel.findOne({ email })
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body
 
-  // check if email already exists
-  if (emailExist) {
-    res.status(400)
-    throw new Error('Email already exists')
+    // Check if the user exists
+    const user = await User.findOne({ email })
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password' })
+    }
+
+    // Validate the password (since passwords are stored in plain text)
+    if (password !== user.password) {
+      return res.status(401).json({ message: 'Invalid email or password' })
+    }
+
+    // Return user data upon successful login
+    res.status(200).json({
+      message: 'Login successful',
+      user: {
+        id: user._id,
+        fullName: user.fullName,
+        contactNumber: user.contactNumber,
+        username: user.username,
+        email: user.email,
+        address: user.address,
+        state: user.state,
+        pinCode: user.pinCode,
+        role: user.role, // Optionally include the user role
+      },
+    })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
   }
+}
 
-  const doc = new StudentAuthModel({
-    fullname,
-    address,
-    school,
-    email,
-    password,
-  })
+exports.adminSignup = async (req, res) => {
+  try {
+    const { email, password } = req.body
 
-  await doc.save()
-  res.status(200).json({ successMsg: 'Student saved in db!' })
-})
+    // Check if the admin already exists
+    let existingAdmin = await Admin.findOne({ email })
+    if (existingAdmin) {
+      return res.status(400).json({ message: 'Admin already exists' })
+    }
 
-// StudentSignIn
-const studentSignIn = asynHandler(async (req, res) => {
-  const { email, password } = req.body
+    // Create a new admin with plain text password
+    const admin = new Admin({ email, password }) // Storing plain text password
+    await admin.save()
 
-  if (!email || !password) {
-    res.status(400)
-    throw new Error('Please include all fields')
+    res.status(201).json({ message: 'Admin created successfully' })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
   }
+}
 
-  const student = await StudentAuthModel.findOne({ email })
+exports.adminSignin = async (req, res) => {
+  try {
+    const { email, password } = req.body
 
-  // check if email do not exists
-  if (!student) {
-    res.status(400)
-    throw new Error("Email does'nt exist! Please sign up first")
+    // Check if the admin exists
+    const admin = await Admin.findOne({ email })
+    if (!admin) {
+      return res.status(401).json({ message: 'Invalid email or password' })
+    }
+
+    // Validate the password (since passwords are stored in plain text)
+    if (password !== admin.password) {
+      return res.status(401).json({ message: 'Invalid email or password' })
+    }
+
+    res.status(200).json({ message: 'Login successful', admin })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
   }
-
-  // if passwords do not match
-  if (student.password !== password) {
-    res.status(400)
-    throw new Error('Incorrect password!')
-  }
-
-  // sign in student
-  res.json({
-    successMsg: 'Sign in successfully!',
-    student: {
-      _id: student._id,
-      fullname: student.fullname,
-      address: student.address,
-      school: student.school,
-      email: student.email,
-      paymentstatus: student.paymentstatus,
-    },
-  })
-})
-
-// Teacher SIGNUP
-const teacherSignUp = asynHandler(async (req, res) => {
-  const { fullname, address, school, email, password } = req.body
-
-  if (!fullname || !address || !school || !email || !password) {
-    res.status(400)
-    throw new Error('Please include all fields')
-  }
-
-  const emailExist = await TeacherAuthModel.findOne({ email })
-
-  // check if email already exists
-  if (emailExist) {
-    res.status(400)
-    throw new Error('Email already exists')
-  }
-
-  const doc = new TeacherAuthModel({
-    fullname,
-    address,
-    school,
-    email,
-    password,
-  })
-
-  await doc.save()
-  res.status(200).json({ successMsg: 'Teacher saved in db!' })
-})
-
-// Teacher Sign In
-const teacherSignIn = asynHandler(async (req, res) => {
-  const { email, password } = req.body
-
-  if (!email || !password) {
-    res.status(400)
-    throw new Error('Please include all fields')
-  }
-
-  const teacher = await TeacherAuthModel.findOne({ email })
-
-  // check if email do not exists
-  if (!teacher) {
-    res.status(400)
-    throw new Error("Email does'nt exist! Please sign up first")
-  }
-
-  // if passwords do not match
-  if (teacher.password !== password) {
-    res.status(400)
-    throw new Error('Incorrect password!')
-  }
-
-  // sign in teacher
-  res.json({
-    successMsg: 'Sign in successfully!',
-    teacher: {
-      _id: teacher._id,
-      fullname: teacher.fullname,
-      address: teacher.address,
-      school: teacher.school,
-      email: teacher.email,
-      teacherstatus: teacher.teacherstatus,
-    },
-  })
-})
-
-// ADMIN SIGNUP
-const adminSignUp = asyncHandler(async (req, res) => {
-  const { email, password } = req.body
-
-  if (!email || !password) {
-    res.status(400)
-    throw new Error('Please include all fields')
-  }
-
-  const emailExist = await AdminSchema.findOne({ email })
-
-  // check if email already exists
-  if (emailExist) {
-    res.status(400)
-    throw new Error('Email already exists')
-  }
-
-  const doc = new AdminSchema({
-    email,
-    password,
-  })
-
-  await doc.save()
-  res.status(200).json({ successMsg: 'Admin saved in db!' })
-})
-
-// Admin Sign In
-const adminSignIn = asynHandler(async (req, res) => {
-  const { email, password } = req.body
-
-  if (!email || !password) {
-    res.status(400)
-    throw new Error('Please include all fields')
-  }
-
-  const admin = await AdminSchema.findOne({ email })
-
-  // check if email do not exists
-  if (!admin) {
-    res.status(404)
-    throw new Error("Email does'nt exist! Please sign up first")
-  }
-
-  // if passwords do not match
-  if (admin.password !== password) {
-    res.status(400)
-    throw new Error('Incorrect password!')
-  }
-
-  // sign in admin
-  res.json({
-    successMsg: 'Sign in successfully!',
-    admin: {
-      _id: admin._id,
-      fullname: admin.fullname,
-      address: admin.address,
-      email: admin.email,
-    },
-  })
-})
-
-module.exports = {
-  studentSignUp,
-  studentSignIn,
-  teacherSignIn,
-  teacherSignUp,
-  adminSignUp,
-  adminSignIn,
 }
