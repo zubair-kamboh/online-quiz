@@ -20,8 +20,7 @@ After installation of packages is finished than run "npm start" in client folder
 
 Now run mongodb compass that you installed earlier and put "mongodb://localhost:27017" in New Connection URL and click Connect button.
 
-![image](<img width="959" alt="image" src="https://github.com/zubair-kamboh/online-quiz/assets/70833594/13293b71-a839-4c6a-a8f0-3228d4eeb7d7">
-)
+<img width="959" alt="image" src="https://github.com/zubair-kamboh/online-quiz/assets/70833594/9bd7ad6b-6649-4f60-9024-3662d1d40007">
 
 Go to "http://localhost:3000/admin/login" in browser.
 
